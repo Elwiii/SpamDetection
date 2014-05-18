@@ -8,6 +8,7 @@ package model;
 
 import java.io.Serializable;
 import java.util.List;
+import static model.TypeMail.SPAM;
 
 /**
  *
@@ -32,6 +33,7 @@ public class BaseApprentissage implements Serializable{
     
     public void add(Couple couple){
         base.add(couple);
+        if(couple.y == SPAM){ nombre_spam++; }else{ nombre_ham++; }
     }
     
     //@todo mettre ici les ajouts à la base

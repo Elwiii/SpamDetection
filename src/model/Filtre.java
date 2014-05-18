@@ -227,8 +227,20 @@ public class Filtre {
         if (hams.length < nombre_hams) {
             throw new Exception("Il n'y a pas assez de ham sous le dossier " + path_baseapp_ham);
         }
+        /* extraction semi-aléatoire des hams */
+        double total = 0;
+        int min, max;
+        double q = hams.length/nombre_hams;
+        int[] stack = new int[nombre_hams];
+        for(int i = 0; i < nombre_hams; i++){
+            min = (int)total;
+            total += q;
+            max = (int)total;
+            stack[i] = min + (int)(Math.random() * ((max - min)));
+	}
+        // fin de la génération du stack
         for (int i = 0; i < nombre_hams; i++) {
-            couples.add(new Couple(lire_message(hams[i], typeExtractWord), HAM));
+            couples.add(new Couple(lire_message(hams[stack[i]], typeExtractWord), HAM));
         }
 
         File dossier_spam = new File(path_baseapp_spam);
@@ -236,8 +248,20 @@ public class Filtre {
         if (spams.length < nombre_spams) {
             throw new Exception("Il n'y a pas assez de spams sous le dossier " + path_baseapp_spam);
         }
+        /* extraction semi-aléatoire des spams */
+        total = 0;
+        q = spams.length/nombre_spams;
+        stack = null;
+        stack = new int[nombre_spams];
+        for(int i = 0; i < nombre_spams; i++){
+            min = (int)total;
+            total += q;
+            max = (int)total;
+            stack[i] = min + (int)(Math.random() * ((max - min)));
+	}
+        // fin de la génération du stack
         for (int i = 0; i < nombre_spams; i++) {
-            couples.add(new Couple(lire_message(spams[i], typeExtractWord), SPAM));
+            couples.add(new Couple(lire_message(spams[stack[i]], typeExtractWord), SPAM));
         }
 
     }

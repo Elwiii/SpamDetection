@@ -152,16 +152,16 @@ public class ClassifieurSPAM implements Serializable {
         double ancien_diviseur_bham = diviseur_bham;
         double ancien_diviseur_bspam = diviseur_bspam;
 
-        diviseur_bham = ((2. * epsilon_raffinement) + baseApprentissage.getNombre_ham()) * ancien_diviseur_bham;
-        diviseur_bspam = ((2. * epsilon_raffinement) + baseApprentissage.getNombre_spam()) * ancien_diviseur_bspam;
+        diviseur_bham = ((2. * epsilon_raffinement) + baseApprentissage.getNombre_ham()) * (double)ancien_diviseur_bham;
+        diviseur_bspam = ((2. * epsilon_raffinement) + baseApprentissage.getNombre_spam()) * (double)ancien_diviseur_bspam;
 
         if (c.y == SPAM) {
             for (int i = 0; i < bspam.length; i++) {
-                bspam[i] = (bspam[i] + c.x[i]) / diviseur_bspam;
+                bspam[i] = (bspam[i] + c.x[i]) / (double)diviseur_bspam;
             }
         } else {
-            for (int i = 0; i < bspam.length; i++) {
-                bham[i] = (bham[i] + c.x[i]) / diviseur_bham;
+            for (int i = 0; i < bham.length; i++) {
+                bham[i] = (bham[i] + c.x[i]) / (double)diviseur_bham;
             }
         }
     }

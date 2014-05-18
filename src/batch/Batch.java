@@ -24,7 +24,7 @@ public class Batch {
             + "-ah  | -apprentissageham    path du dossier contenant la base d'apprentissage des hams suivis du nombre de fichier à prendre en compte\n"
             + "-ts  | -testspam            path du dossier contenant la base de test des spams suivis du nombre de fichier à prendre en compte\n"
             + "-th  | -testham             path du dossier contenant la base de test des hams suivis du nombre de fichier à prendre en compte\n"
-            + "-f   | -file                path d'un fichier à faire apprendre à une base déjà existante suivi de SPAM ou HAM. Cette option est obligatoirement combinée à -c\n"
+            + "-f   | -file                path d'un fichier à faire apprendre à une base déjà existante suivi de SPAM ou HAM. Cette option est obligatoirement combinée à -c. SLOW_ADD par défaut, FAST_ADD buggé, spécifiable avant le path.\n"
             + "-pr  | -prediction          path du fichier à prédire\n"
             + "-s   | -save                path du classifieur qu'on veut sauvergarder\n"
             + "-v   | -verbose             autorise certains system.out\n"
@@ -42,8 +42,9 @@ public class Batch {
             + "\tjava Batch -c monclassifieur -pr email.txt\n\n"
             + "apprentissage en ligne\n\n"
             + "\tjava Batch -c monclassifieur -f nouveaumailaapprendre.txt SPAM\n\n"
+            + "\tjava Batch -c monclassifieur -f FAST nouveaumailaapprendre.txt SPAM\n\n"
             + "creation d'un classifieur\n\n"
-            + "\tjava Batch -d dico.txt -s monnouveauclassifieur -as baseapp/spam -ah baseapp/ham\n\n";
+            + "\tjava Batch -d dico.txt -s monnouveauclassifieur -as baseapp/spam 150 -ah baseapp/ham 100\n\n";
 
     public static void main(String[] args) {
         try {
@@ -62,6 +63,7 @@ public class Batch {
             int nb_ts = 0;
             int nb_th = 0;
             int typeExtractWord = Filtre.ADVANCED;
+            int typeSlowOrFastAdd = Filtre.SLOW_ADD;
             TypeMail typeAdd = null;
             for (int i = 0; i < args.length; i++) {
 //                System.out.println("arg[" + i + "] : " + args[i]);
@@ -78,7 +80,7 @@ public class Batch {
                         }
                         break;
                     case "-d":
-                    case "+dictionnaire":
+                    case "-dictionnaire":
                         i++;
                         path_d = args[i];
                         break;
@@ -88,7 +90,7 @@ public class Batch {
                         path_classifieur = args[i];
                         break;
                     case "-as":
-                    case "apprentissagespam":
+                    case "-apprentissagespam":
                         i++;
                         path_as = args[i];
                         i++;
@@ -117,6 +119,17 @@ public class Batch {
                         break;
                     case "-f":
                     case "-file":
+                        i++;
+                        if (args[i].equals("SLOW")) {
+                            typeSlowOrFastAdd = Filtre.SLOW_ADD;
+                        } else if (args[i].equals("FAST")) {
+                            typeSlowOrFastAdd = Filtre.FAST_ADD;
+                        } else {
+                            path_f = args[i];
+                            i++;
+                            typeAdd = TypeMail.valueOf(args[i]);
+                            break;
+                        }
                         i++;
                         path_f = args[i];
                         i++;
@@ -155,7 +168,7 @@ public class Batch {
 
             if (path_f != null) {
                 if (path_classifieur != null) {
-                    f.addFileToClassifieur(path_f, typeAdd, Filtre.FAST_ADD);
+                    f.addFileToClassifieur(path_f, typeAdd, typeSlowOrFastAdd);
                     f.updateClassifieur(path_classifieur);
                 } else {
                     throw new Exception("Vous devez préciser le chemin du classifieur pour apprendre une nouvelle donnée");
