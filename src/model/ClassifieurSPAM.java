@@ -152,18 +152,29 @@ public class ClassifieurSPAM implements Serializable {
         double ancien_diviseur_bham = diviseur_bham;
         double ancien_diviseur_bspam = diviseur_bspam;
 
-        diviseur_bham = ((2. * epsilon_raffinement) + baseApprentissage.getNombre_ham()) * (double)ancien_diviseur_bham;
-        diviseur_bspam = ((2. * epsilon_raffinement) + baseApprentissage.getNombre_spam()) * (double)ancien_diviseur_bspam;
-
-        if (c.y == SPAM) {
-            for (int i = 0; i < bspam.length; i++) {
-                bspam[i] = (bspam[i] + c.x[i]) / (double)diviseur_bspam;
-            }
-        } else {
-            for (int i = 0; i < bham.length; i++) {
-                bham[i] = (bham[i] + c.x[i]) / (double)diviseur_bham;
-            }
+        switch (c.y) {
+            case SPAM:
+                diviseur_bspam = ((2. * epsilon_raffinement) + (double) baseApprentissage.getNombre_spam());
+                for (int i = 0; i < c.x.length; i++) {
+                    bspam[i] = (bspam[i] * ancien_diviseur_bspam + c.x[i]) / diviseur_bspam; // rafinement deja compté
+                }
+                break;
+            case HAM:
+                diviseur_bham = ((2. * epsilon_raffinement) + (double) baseApprentissage.getNombre_ham());
+                for (int i = 0; i < c.x.length; i++) {
+                    bham[i] = (bham[i] * ancien_diviseur_bham + c.x[i]) / diviseur_bham; // raffinement deja compté
+                }
+                break;
         }
+
+//        // calcul des bham et bspam
+//        diviseur_bham = (2. * epsilon_raffinement) + baseApprentissage.getNombre_ham();
+//        diviseur_bspam = (2. * epsilon_raffinement) + baseApprentissage.getNombre_spam();
+//
+//        for (int i = 0; i < bspam.length; i++) {
+//            bspam[i] = (bspam[i] + epsilon_raffinement) / diviseur_bspam;
+//            bham[i] = (bham[i] + epsilon_raffinement) / diviseur_bham;
+//        }
     }
 
     /**

@@ -24,7 +24,7 @@ public class Batch {
             + "-ah  | -apprentissageham    path du dossier contenant la base d'apprentissage des hams suivis du nombre de fichier à prendre en compte\n"
             + "-ts  | -testspam            path du dossier contenant la base de test des spams suivis du nombre de fichier à prendre en compte\n"
             + "-th  | -testham             path du dossier contenant la base de test des hams suivis du nombre de fichier à prendre en compte\n"
-            + "-f   | -file                path d'un fichier à faire apprendre à une base déjà existante suivi de SPAM ou HAM. Cette option est obligatoirement combinée à -c. SLOW_ADD par défaut, FAST_ADD buggé, spécifiable avant le path.\n"
+            + "-f   | -file                path d'un fichier à faire apprendre à une base déjà existante suivi de SPAM ou HAM. Cette option est obligatoirement combinée à -c. SLOW_ADD par défaut, FAST_ADD en théorie débuggé, spécifiable avant le path : [SLOW|FAST].\n"
             + "-pr  | -prediction          path du fichier à prédire\n"
             + "-s   | -save                path du classifieur qu'on veut sauvergarder\n"
             + "-v   | -verbose             autorise certains system.out\n"
